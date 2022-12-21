@@ -4,7 +4,7 @@ import List from "../posting/List";
 
 function Home() {
   const globalTodo = useSelector((state) => state.todosReducer.todos);
-  console.log("globalTodo : ", globalTodo);
+
   return (
     <div>
       <div>여긴 홈!</div>
@@ -13,7 +13,9 @@ function Home() {
         <div>진행중!</div>
         <div>
           {globalTodo.map((todo) =>
-            !todo.isDone ? <List key={todo.id} globalTodo={todo} /> : null
+            !todo.isDone ? (
+              <List key={todo.id} globalTodoId={todo.id} globalTodo={todo} />
+            ) : null
           )}
         </div>
       </div>
