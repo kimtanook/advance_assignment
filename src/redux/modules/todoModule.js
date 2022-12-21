@@ -5,8 +5,6 @@ import axios from "axios";
 
 const initialState = {
   todos: [],
-  isLoading: false,
-  error: null,
 };
 
 export const getTodos = createAsyncThunk("getTodos", async () => {
@@ -21,6 +19,16 @@ export const deleteTodo = createAsyncThunk("deleteTodo", async (todoId) => {
   await axios.delete(`http://localhost:3001/todos/${todoId}`);
   return todoId;
 });
+export const updateTodo = createAsyncThunk(
+  "updateTodo",
+  async ({todoId, title, body}) => {
+    await axios.patch(`http://localhost:3001/todos/${todoId}`, {
+      title: title,
+      body: body,
+    });
+    return {todoId, title, body};
+  }
+);
 
 export const todosSlice = createSlice({
   name: "todos",
@@ -37,6 +45,20 @@ export const todosSlice = createSlice({
     });
     builder.addCase(deleteTodo.fulfilled, (state, action) => {
       state.todos = state.todos.filter((todo) => todo.id !== action.payload);
+      state.status = "complete";
+    });
+    builder.addCase(updateTodo.fulfilled, (state, action) => {
+      state.todos = state.todos.map((todo) => {
+        if (todo.id === action.payload.todoId) {
+          return {
+            ...todo,
+            title: action.payload.title,
+            body: action.payload.body,
+          };
+        } else {
+          return todo;
+        }
+      });
       state.status = "complete";
     });
   },
