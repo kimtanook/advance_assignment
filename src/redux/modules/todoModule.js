@@ -29,6 +29,15 @@ export const updateTodo = createAsyncThunk(
     return {todoId, title, body};
   }
 );
+export const confirmTodo = createAsyncThunk(
+  "confirmTodo",
+  async ({todoId, isDone}) => {
+    await axios.patch(`http://localhost:3001/todos/${todoId}`, {
+      isDone: isDone,
+    });
+    return {todoId};
+  }
+);
 
 export const todosSlice = createSlice({
   name: "todos",
@@ -54,6 +63,19 @@ export const todosSlice = createSlice({
             ...todo,
             title: action.payload.title,
             body: action.payload.body,
+          };
+        } else {
+          return todo;
+        }
+      });
+      state.status = "complete";
+    });
+    builder.addCase(confirmTodo.fulfilled, (state, action) => {
+      state.todos = state.todos.map((todo) => {
+        if (todo.id === action.payload.todoId) {
+          return {
+            ...todo,
+            isDone: !todo.isDone,
           };
         } else {
           return todo;
