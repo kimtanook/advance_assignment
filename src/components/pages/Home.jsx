@@ -1,3 +1,4 @@
+import {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import styled, {keyframes} from "styled-components";
 import Form from "../posting/Form";
@@ -5,17 +6,32 @@ import List from "../posting/List";
 
 function Home() {
   const globalTodo = useSelector((state) => state.todosReducer.todos);
-  console.log(globalTodo);
+  const [time, setTime] = useState(
+    new Date(Date.now() + 9 * 60 * 60 * 1000).toLocaleString("ko-KR", {
+      timeZone: "UTC",
+    })
+  );
 
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTime(
+        new Date(Date.now() + 9 * 60 * 60 * 1000).toLocaleString("ko-KR", {
+          timeZone: "UTC",
+        })
+      );
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
   return (
     <div>
       <StHomeHeader>
         <StHomeHeaderTitle>Todo List</StHomeHeaderTitle>
+        <StClock>{time}</StClock>
         <Form />
       </StHomeHeader>
       <StTodoMainContainer>
         <StTodoItemContainer>
-          <div>진행중!</div>
+          <StCompleteContainerName>진행중!</StCompleteContainerName>
           <div>
             {globalTodo.map((todo) =>
               !todo.isDone ? (
@@ -30,7 +46,7 @@ function Home() {
           </div>
         </StTodoItemContainer>
         <StTodoItemContainer>
-          <div>완료!</div>
+          <StCompleteContainerName>완료!</StCompleteContainerName>
           <div>
             {globalTodo.map((todo) =>
               todo.isDone ? (
@@ -63,12 +79,23 @@ const StHomeHeader = styled.div`
   font-size: 40px;
   margin: 30px;
 `;
+const StClock = styled.div`
+  font-size: 15px;
+  margin: 10px;
+`;
 const StHomeHeaderTitle = styled.div`
   & {
     animation: ${boxFade} 1s step-end infinite; // ease-in-out infinite : 무한 alternate
   }
 `;
-
+const StCompleteContainerName = styled.div`
+  background-color: #c3c3c3;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+`;
 const StTodoMainContainer = styled.div`
   display: grid;
   gap: 20px;
