@@ -1,8 +1,12 @@
 import {useState} from "react";
 import {useDispatch} from "react-redux";
-import {deleteTodo, updateTodo} from "../../redux/modules/todoModule";
+import {
+  confirmTodo,
+  deleteTodo,
+  updateTodo,
+} from "../../redux/modules/todoModule";
 
-function List({globalTodoId, globalTodo}) {
+function List({globalTodoId, globalTodo, globalTodoIsDone}) {
   const [updateToggle, setUpdateToggle] = useState(false);
   const [newTitle, setNewTitle] = useState(globalTodo.title);
   const [newBody, setNewBody] = useState(globalTodo.body);
@@ -32,6 +36,10 @@ function List({globalTodoId, globalTodo}) {
 
   const onToggleButton = () => {
     setUpdateToggle(!updateToggle);
+  };
+
+  const onConfirmButton = () => {
+    dispatch(confirmTodo({todoId: globalTodoId, isDone: globalTodoIsDone}));
   };
   return (
     <div>
@@ -64,6 +72,9 @@ function List({globalTodoId, globalTodo}) {
       </button>
       <button type="button" onClick={onToggleButton}>
         수정
+      </button>
+      <button type="button" onClick={onConfirmButton}>
+        Success
       </button>
     </div>
   );

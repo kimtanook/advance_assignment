@@ -33,9 +33,9 @@ export const confirmTodo = createAsyncThunk(
   "confirmTodo",
   async ({todoId, isDone}) => {
     await axios.patch(`http://localhost:3001/todos/${todoId}`, {
-      isDone: isDone,
+      isDone: !isDone,
     });
-    return {todoId};
+    return {todoId, isDone};
   }
 );
 
@@ -75,7 +75,7 @@ export const todosSlice = createSlice({
         if (todo.id === action.payload.todoId) {
           return {
             ...todo,
-            isDone: !todo.isDone,
+            isDone: !action.payload.isDone,
           };
         } else {
           return todo;
