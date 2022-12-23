@@ -71,11 +71,20 @@ function List({globalTodoId, globalTodo, globalTodoIsDone}) {
           삭제
         </StButton>
         <StButton type="button" onClick={onToggleButton}>
-          수정
+          {updateToggle ? "취소" : "수정"}
         </StButton>
         <StButton type="button" onClick={onConfirmButton}>
-          Success
+          {globalTodoIsDone ? "Cancel.." : "Success!!"}
         </StButton>
+        <StDate>
+          작성일 :
+          {new Date(globalTodo.id + 9 * 60 * 60 * 1000).toLocaleString(
+            "ko-KR",
+            {
+              timeZone: "UTC",
+            }
+          )}
+        </StDate>
       </StButtonContainer>
     </StTodoItem>
   );
@@ -121,5 +130,9 @@ const StButtonContainer = styled.div`
   margin: 10px;
 `;
 const StButton = styled.button`
+  margin: 5px;
+`;
+const StDate = styled.div`
+  font-size: 14px;
   margin: 5px;
 `;
