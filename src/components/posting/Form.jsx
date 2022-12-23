@@ -15,11 +15,14 @@ function Form() {
     }
     dispatch(
       addTodo({
+        id: Date.now(),
         title: title,
         body: body,
         isDone: false,
       })
     );
+    setTitle("");
+    setBody("");
   };
 
   return (
@@ -28,6 +31,7 @@ function Form() {
         onChange={(event) => {
           setTitle(event.target.value);
         }}
+        value={title}
         type="text"
         placeholder="제목"
         required
@@ -36,6 +40,7 @@ function Form() {
         onChange={(event) => {
           setBody(event.target.value);
         }}
+        value={body}
         type="text"
         placeholder="내용"
         required
