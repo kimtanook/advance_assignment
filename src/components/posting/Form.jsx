@@ -15,6 +15,7 @@ function Form() {
     }
     dispatch(
       addTodo({
+        id: Date.now(),
         title: title,
         body: body,
         isDone: false,
