@@ -1,29 +1,7 @@
-import {useState} from "react";
-import {useDispatch} from "react-redux";
-import {addTodo} from "../../redux/modules/todoModule";
+import useTodo from "../../hooks/useTodo";
 
 function Form() {
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-
-  const dispatch = useDispatch();
-
-  const onSubmitTodo = (event) => {
-    event.preventDefault();
-    if (title === "" || body === "") {
-      return;
-    }
-    dispatch(
-      addTodo({
-        id: Date.now(),
-        title: title,
-        body: body,
-        isDone: false,
-      })
-    );
-    setTitle("");
-    setBody("");
-  };
+  const { onSubmitTodo, title, body, setTitle, setBody } = useTodo();
 
   return (
     <form onSubmit={onSubmitTodo}>

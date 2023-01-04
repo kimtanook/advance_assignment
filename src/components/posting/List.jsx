@@ -1,51 +1,26 @@
-import {useState} from "react";
-import {useDispatch} from "react-redux";
 import styled from "styled-components";
-import {
-  confirmTodo,
-  deleteTodo,
-  updateTodo,
-} from "../../redux/modules/todoModule";
+import useTodo from "../../hooks/useTodo";
 
-function List({globalTodoId, globalTodo, globalTodoIsDone}) {
-  const [updateToggle, setUpdateToggle] = useState(false);
-  const [newTitle, setNewTitle] = useState(globalTodo.title);
-  const [newBody, setNewBody] = useState(globalTodo.body);
+function List({ globalTodoId, globalTodo, globalTodoIsDone }) {
+  const {
+    onChangeTitle,
+    onChangeBody,
+    onDeleteTodo,
+    updateToggle,
+    onUpdateSubmit,
+    onToggleButton,
+    newTitle,
+    newBody,
+    onConfirmButton,
+  } = useTodo();
 
-  const dispatch = useDispatch();
-
-  const onChangeTitle = (event) => {
-    setNewTitle(event.target.value);
-    console.log("title", event.target.value);
-  };
-  const onChangeBody = (event) => {
-    setNewBody(event.target.value);
-    console.log("body", event.target.value);
-  };
-
-  const onDeleteTodo = () => {
-    dispatch(deleteTodo(globalTodoId));
-  };
-
-  const onUpdateSubmit = (event) => {
-    event.preventDefault();
-    dispatch(
-      updateTodo({todoId: globalTodoId, title: newTitle, body: newBody})
-    );
-    onToggleButton();
-  };
-
-  const onToggleButton = () => {
-    setUpdateToggle(!updateToggle);
-  };
-
-  const onConfirmButton = () => {
-    dispatch(confirmTodo({todoId: globalTodoId, isDone: globalTodoIsDone}));
-  };
   return (
     <StTodoItem>
       {updateToggle ? (
-        <form onSubmit={onUpdateSubmit} id={globalTodoId}>
+        <form
+          onSubmit={(event) => onUpdateSubmit(event, globalTodoId)}
+          id={globalTodoId}
+        >
           <StTitleInput
             type="text"
             onChange={onChangeTitle}
@@ -67,13 +42,16 @@ function List({globalTodoId, globalTodo, globalTodoIsDone}) {
         </div>
       )}
       <StButtonContainer>
-        <StButton type="button" onClick={onDeleteTodo}>
+        <StButton type="button" onClick={() => onDeleteTodo(globalTodoId)}>
           삭제
         </StButton>
         <StButton type="button" onClick={onToggleButton}>
           {updateToggle ? "취소" : "수정"}
         </StButton>
-        <StButton type="button" onClick={onConfirmButton}>
+        <StButton
+          type="button"
+          onClick={() => onConfirmButton(globalTodoId, globalTodoIsDone)}
+        >
           {globalTodoIsDone ? "Cancel.." : "Success!!"}
         </StButton>
         <StDate>
